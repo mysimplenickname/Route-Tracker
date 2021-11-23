@@ -7,6 +7,7 @@
 import UIKit
 import GoogleMaps
 import CoreLocation
+import RealmSwift
 
 class MapViewController: UIViewController {
 
@@ -14,13 +15,20 @@ class MapViewController: UIViewController {
     
     var locationManager: CLLocationManager?
     
+    var route: GMSPolyline?
+    var routePath: GMSMutablePath?
+    
+    @IBOutlet weak var startTrackingButton: UIButton!
+    @IBOutlet weak var stopTrackingButton: UIButton!
+    @IBOutlet weak var showLastTrackButton: UIButton!
+    @IBOutlet weak var currentLocationButton: UIButton!
+    
     @IBOutlet weak var mapView: GMSMapView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureMap()
         configureLoactionManager()
-        locationManager?.delegate = self
     }
     
     func configureMap() {
@@ -30,11 +38,70 @@ class MapViewController: UIViewController {
 
     func configureLoactionManager() {
         locationManager = CLLocationManager()
+        locationManager?.delegate = self
+        locationManager?.allowsBackgroundLocationUpdates = true
+        locationManager?.pausesLocationUpdatesAutomatically = false
+        locationManager?.startMonitoringSignificantLocationChanges()
         locationManager?.requestWhenInUseAuthorization()
     }
  
     @IBAction func updateLocation(_ sender: Any) {
+        mapView.clear()
+        route?.map = nil
+        route = GMSPolyline()
+        routePath = GMSMutablePath()
+        route?.map = mapView
         locationManager?.startUpdatingLocation()
+    }
+    
+    @IBAction func stopUpdatingLocation(_ sender: Any) {
+        locationManager?.stopUpdatingLocation()
+        guard let path = routePath else { return }
+        var newPathCoordinates = [Coordinate]()
+        for i in 0..<path.count() {
+            guard let coordinate = routePath?.coordinate(at: i) else { return }
+            let newPathCoordinate = Coordinate(coordinate.latitude, coordinate.longitude)
+            newPathCoordinates.append(newPathCoordinate)
+        }
+        let realm = try! Realm()
+        try! realm.write {
+            realm.deleteAll()
+            realm.add(newPathCoordinates)
+        }
+        routePath = nil
+        route?.map = nil
+    }
+    
+    @IBAction func showLastTrack(_ sender: Any) {
+        guard routePath == nil else {
+            let alert = UIAlertController(title: "Error", message: "You should stop tracking to see your previous route", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            alert.addAction(UIAlertAction(title: "Stop", style: .destructive, handler: { [weak self] _ in
+                self?.stopUpdatingLocation(alert)
+                self?.showTrack()
+            }))
+            self.present(alert, animated: true, completion: nil)
+            return
+        }
+        showTrack()
+    }
+    
+    func showTrack() {
+        let path = GMSMutablePath()
+        
+        let realm = try! Realm()
+        let coordinates = Array(realm.objects(Coordinate.self))
+        coordinates.forEach { coordinate in
+            let cllocationcoordinate2d = CLLocationCoordinate2DMake(coordinate.latitude, coordinate.longtitude)
+            path.add(cllocationcoordinate2d)
+        }
+        
+        let polyline = GMSPolyline(path: path)
+        polyline.map = mapView
+        
+        let bounds = GMSCoordinateBounds(path: path)
+        let camera = mapView.camera(for: bounds, insets: UIEdgeInsets())
+        mapView.animate(to: camera!)
     }
     
     @IBAction func currentLocation(_ sender: Any) {
@@ -45,11 +112,12 @@ class MapViewController: UIViewController {
 
 extension MapViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let coordinate = (locations.first?.coordinate)!
-        mapView.animate(toLocation: coordinate)
+        guard let location = locations.last else { return }
+        routePath?.add(location.coordinate)
+        route?.path = routePath
         
-        let marker = GMSMarker(position: coordinate)
-        marker.map = mapView
+        let position = GMSCameraPosition.camera(withTarget: location.coordinate, zoom: 17)
+        mapView.animate(to: position)
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
