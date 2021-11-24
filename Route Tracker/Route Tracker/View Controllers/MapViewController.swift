@@ -8,12 +8,15 @@ import UIKit
 import GoogleMaps
 import CoreLocation
 import RealmSwift
+import RxSwift
+import RxCocoa
+import RxRelay
 
 class MapViewController: UIViewController {
 
     let coordinate = CLLocationCoordinate2D(latitude: 55.753215, longitude: 37.622504)
     
-    var locationManager: CLLocationManager?
+    var locationManager = LocationManager.instance
     
     var route: GMSPolyline?
     var routePath: GMSMutablePath?
@@ -30,8 +33,8 @@ class MapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureMap()
-        configureLoactionManager()
         configureNotificationCenter()
+        configureLocationManager()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -100,13 +103,18 @@ class MapViewController: UIViewController {
         mapView.camera = camera
     }
 
-    func configureLoactionManager() {
-        locationManager = CLLocationManager()
-        locationManager?.delegate = self
-        locationManager?.allowsBackgroundLocationUpdates = true
-        locationManager?.pausesLocationUpdatesAutomatically = false
-        locationManager?.startMonitoringSignificantLocationChanges()
-        locationManager?.requestWhenInUseAuthorization()
+    func configureLocationManager() {
+        locationManager
+            .location
+            .asObservable()
+            .bind { [weak self] location in
+                guard let location = location else { return }
+                self?.routePath?.add(location.coordinate)
+                self?.route?.path = self?.routePath
+                
+                let position = GMSCameraPosition.camera(withTarget: location.coordinate, zoom: 17)
+                self?.mapView.animate(to: position)
+            }
     }
  
     @IBAction func updateLocation(_ sender: Any) {
@@ -115,11 +123,11 @@ class MapViewController: UIViewController {
         route = GMSPolyline()
         routePath = GMSMutablePath()
         route?.map = mapView
-        locationManager?.startUpdatingLocation()
+        locationManager.startUpdatingLocation()
     }
     
     @IBAction func stopUpdatingLocation(_ sender: Any) {
-        locationManager?.stopUpdatingLocation()
+        locationManager.stopUpdatingLocation()
         guard let path = routePath else { return }
         var newPathCoordinates = [Coordinate]()
         for i in 0..<path.count() {
@@ -169,24 +177,7 @@ class MapViewController: UIViewController {
     }
     
     @IBAction func currentLocation(_ sender: Any) {
-        locationManager?.requestLocation()
+        locationManager.requestLocation()
     }
     
-}
-
-extension MapViewController: CLLocationManagerDelegate {
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else { return }
-        routePath?.add(location.coordinate)
-        route?.path = routePath
-        
-        let position = GMSCameraPosition.camera(withTarget: location.coordinate, zoom: 17)
-        mapView.animate(to: position)
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print(error)
-    }
-
 }

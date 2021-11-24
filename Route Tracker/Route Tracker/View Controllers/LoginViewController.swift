@@ -7,6 +7,8 @@
 
 import UIKit
 import RealmSwift
+import RxSwift
+import RxCocoa
 
 class LoginViewController: UIViewController {
 
@@ -17,6 +19,7 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureLoginBindings()
     }
     
     @IBAction func logIn(_ sender: Any) {
@@ -57,6 +60,26 @@ class LoginViewController: UIViewController {
             realm.add(User(login, password))
         }
         print("Success! You're changed your password!")
+    }
+    
+    func configureLoginBindings() {
+        Observable
+            .combineLatest(
+                loginTextField.rx.text,
+                passwordTextField.rx.text
+            )
+            .map { login, password in
+                guard
+                    let login = login,
+                    !login.isEmpty,
+                    let password = password,
+                    password.count >= 6
+                else { return false }
+                return true
+            }
+            .bind { [weak logInButton] isInputFilled in
+                logInButton?.isEnabled = isInputFilled
+            }
     }
 
 }
