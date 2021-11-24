@@ -16,8 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         GMSServices.provideAPIKey("AIzaSyBeaIxth9K8asqajY1LwDkcLnLV1Zinxbw")
-        
-        return true
+
     }
 
     // MARK: UISceneSession Lifecycle
