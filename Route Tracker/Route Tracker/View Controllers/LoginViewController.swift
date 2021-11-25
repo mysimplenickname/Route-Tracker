@@ -12,6 +12,8 @@ import RxCocoa
 
 class LoginViewController: UIViewController {
 
+    var blurManager: BlurManager!
+    
     @IBOutlet weak var loginTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var logInButton: UIButton!
@@ -19,7 +21,43 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+<<<<<<< Updated upstream
         configureLoginBindings()
+=======
+<<<<<<< Updated upstream
+=======
+        configureBlur()
+        configureLoginBindings()
+>>>>>>> Stashed changes
+    }
+    
+    // MARK: - Blur
+    
+    func configureBlur() {
+        blurManager = BlurManager(for: view)
+    }
+    
+    // MARK: - Login
+    
+    func configureLoginBindings() {
+        Observable
+            .combineLatest(
+                loginTextField.rx.text,
+                passwordTextField.rx.text
+            )
+            .map { login, password in
+                guard
+                    let login = login,
+                    !login.isEmpty,
+                    let password = password,
+                    password.count >= 6
+                else { return false }
+                return true
+            }
+            .bind { [weak logInButton] isInputFilled in
+                logInButton?.isEnabled = isInputFilled
+            }
+>>>>>>> Stashed changes
     }
     
     @IBAction func logIn(_ sender: Any) {
