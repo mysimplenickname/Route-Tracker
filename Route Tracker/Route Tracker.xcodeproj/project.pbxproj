@@ -17,6 +17,7 @@
 		96392D55274EFC2F0022761C /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 96392D54274EFC2F0022761C /* RxCocoa */; };
 		96392D57274EFC2F0022761C /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 96392D56274EFC2F0022761C /* RxSwift */; };
 		96392D5A274F018E0022761C /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96392D59274F018E0022761C /* LocationManager.swift */; };
+		96392D5E274F0F340022761C /* BlurManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96392D5D274F0F340022761C /* BlurManager.swift */; };
 		967845A3274D9B7A000F6EDA /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967845A2274D9B7A000F6EDA /* UserModel.swift */; };
 		967845A9274D9FEE000F6EDA /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967845A8274D9FEE000F6EDA /* LoginViewController.swift */; };
 		96BC90D9274C1E00007A177D /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 96BC90D8274C1E00007A177D /* Realm */; };
@@ -36,6 +37,7 @@
 		31BF173E273827B100861978 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		72F8D1330C531486005389E6 /* Pods-Route Tracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Route Tracker.debug.xcconfig"; path = "Target Support Files/Pods-Route Tracker/Pods-Route Tracker.debug.xcconfig"; sourceTree = "<group>"; };
 		96392D59274F018E0022761C /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		96392D5D274F0F340022761C /* BlurManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurManager.swift; sourceTree = "<group>"; };
 		967845A2274D9B7A000F6EDA /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		967845A8274D9FEE000F6EDA /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		96BC90DC274C1E6D007A177D /* CoordinateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateModel.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				96392D59274F018E0022761C /* LocationManager.swift */,
+				96392D5D274F0F340022761C /* BlurManager.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -279,6 +282,7 @@
 				96BC90DD274C1E6D007A177D /* CoordinateModel.swift in Sources */,
 				31BF17312738279300861978 /* AppDelegate.swift in Sources */,
 				96392D5A274F018E0022761C /* LocationManager.swift in Sources */,
+				96392D5E274F0F340022761C /* BlurManager.swift in Sources */,
 				31BF17332738279300861978 /* SceneDelegate.swift in Sources */,
 				967845A3274D9B7A000F6EDA /* UserModel.swift in Sources */,
 				317AFAC827384DF700285FF4 /* MapViewController.swift in Sources */,
