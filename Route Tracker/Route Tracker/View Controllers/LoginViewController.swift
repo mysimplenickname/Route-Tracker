@@ -12,6 +12,8 @@ import RxCocoa
 
 class LoginViewController: UIViewController {
 
+    var blurManager: BlurManager!
+    
     @IBOutlet weak var loginTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var logInButton: UIButton!
@@ -19,7 +21,36 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureBlur()
         configureLoginBindings()
+    }
+    
+    // MARK: - Blur
+    
+    func configureBlur() {
+        blurManager = BlurManager(for: view)
+    }
+    
+    // MARK: - Login
+    
+    func configureLoginBindings() {
+        Observable
+            .combineLatest(
+                loginTextField.rx.text,
+                passwordTextField.rx.text
+            )
+            .map { login, password in
+                guard
+                    let login = login,
+                    !login.isEmpty,
+                    let password = password,
+                    password.count >= 6
+                else { return false }
+                return true
+            }
+            .bind { [weak logInButton] isInputFilled in
+                logInButton?.isEnabled = isInputFilled
+            }
     }
     
     @IBAction func logIn(_ sender: Any) {
@@ -60,26 +91,6 @@ class LoginViewController: UIViewController {
             realm.add(User(login, password))
         }
         print("Success! You're changed your password!")
-    }
-    
-    func configureLoginBindings() {
-        Observable
-            .combineLatest(
-                loginTextField.rx.text,
-                passwordTextField.rx.text
-            )
-            .map { login, password in
-                guard
-                    let login = login,
-                    !login.isEmpty,
-                    let password = password,
-                    password.count >= 6
-                else { return false }
-                return true
-            }
-            .bind { [weak logInButton] isInputFilled in
-                logInButton?.isEnabled = isInputFilled
-            }
     }
 
 }

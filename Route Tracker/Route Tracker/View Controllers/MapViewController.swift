@@ -16,12 +16,12 @@ class MapViewController: UIViewController {
 
     let coordinate = CLLocationCoordinate2D(latitude: 55.753215, longitude: 37.622504)
     
-    var locationManager = LocationManager.instance
+    let locationManager = LocationManager.instance
+    
+    var blurManager: BlurManager!
     
     var route: GMSPolyline?
     var routePath: GMSMutablePath?
-    
-    let blurViewTag: Int = 330
     
     @IBOutlet weak var startTrackingButton: UIButton!
     @IBOutlet weak var stopTrackingButton: UIButton!
@@ -32,71 +32,18 @@ class MapViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureBlur()
         configureMap()
-        configureNotificationCenter()
         configureLocationManager()
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        deconfigureNotificationCenter()
+    // MARK: - Blur
+    
+    func configureBlur() {
+        blurManager = BlurManager(for: view)
     }
     
-    // Notification center
-    
-    func configureNotificationCenter() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(applicationDidBecomeActive),
-            name: UIApplication.didBecomeActiveNotification,
-            object: nil
-        )
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(applicationDidBecomeInactive),
-            name: UIApplication.willResignActiveNotification,
-            object: nil
-        )
-    }
-    
-    func deconfigureNotificationCenter() {
-        NotificationCenter.default.removeObserver(
-            self,
-            name: UIApplication.didBecomeActiveNotification,
-            object: nil
-        )
-        
-        NotificationCenter.default.removeObserver(
-            self,
-            name: UIApplication.willResignActiveNotification,
-            object: nil
-        )
-    }
-    
-    @objc func applicationDidBecomeActive() {
-        removeBlur()
-    }
-    
-    @objc func applicationDidBecomeInactive() {
-        addBlur()
-    }
-    
-    func addBlur() {
-        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.tag = blurViewTag
-        blurEffectView.frame = view.bounds
-        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(blurEffectView)
-    }
-    
-    func removeBlur() {
-        if let blurView = view.viewWithTag(blurViewTag) {
-            blurView.removeFromSuperview()
-        }
-    }
-    
-    // Map
+    // MARK: - Map
     
     func configureMap() {
         let camera = GMSCameraPosition.camera(withTarget: coordinate, zoom: 17)
