@@ -113,7 +113,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-394" y="53"/>
+            <point key="canvasLocation" x="706" y="53"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="VEX-aP-WWz">
@@ -207,12 +207,61 @@
                         <outlet property="loginTextField" destination="tu3-tk-Ubp" id="r8U-0d-mYw"/>
                         <outlet property="passwordTextField" destination="T1l-73-sM4" id="2CS-83-JTo"/>
                         <outlet property="signUpButton" destination="sVr-RC-XwK" id="bWC-9K-2IT"/>
-                        <segue destination="BYZ-38-t0r" kind="show" identifier="toMap" id="Paq-Wv-tle"/>
+                        <segue destination="ZfO-L0-hPQ" kind="show" identifier="toMain" id="Dok-Dz-Hla"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Ks-l2-Mqm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1219" y="53"/>
+        </scene>
+        <!--Main-->
+        <scene sceneID="4SR-P4-W7s">
+            <objects>
+                <viewController storyboardIdentifier="MainViewController" id="ZfO-L0-hPQ" customClass="MainViewController" customModule="Route_Tracker" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="JfP-nW-fVB">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="54" translatesAutoresizingMaskIntoConstraints="NO" id="t8S-TK-RBr">
+                                <rect key="frame" x="153.5" y="390" width="107" height="116"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dgP-4A-nS5">
+                                        <rect key="frame" x="18" y="0.0" width="71.5" height="31"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="To map"/>
+                                        <connections>
+                                            <segue destination="BYZ-38-t0r" kind="show" identifier="toMap" id="PPZ-58-3SF"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rQd-jS-hSs">
+                                        <rect key="frame" x="0.0" y="85" width="107" height="31"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Take a photo"/>
+                                        <connections>
+                                            <action selector="takePhoto:" destination="ZfO-L0-hPQ" eventType="touchUpInside" id="TKf-ZB-2d9"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="8c9-dU-4cK"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="t8S-TK-RBr" firstAttribute="centerX" secondItem="JfP-nW-fVB" secondAttribute="centerX" id="49r-wK-gy8"/>
+                            <constraint firstItem="t8S-TK-RBr" firstAttribute="centerY" secondItem="JfP-nW-fVB" secondAttribute="centerY" id="Y3K-cx-A8F"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Main" id="Mmm-Qh-2Xy">
+                        <barButtonItem key="backBarButtonItem" id="b5p-rc-Vdz"/>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="takePhotoButton" destination="rQd-jS-hSs" id="tBo-Tc-evd"/>
+                        <outlet property="toMapButton" destination="dgP-4A-nS5" id="yW2-T2-eYN"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OkE-Im-bhU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-241" y="53"/>
         </scene>
     </scenes>
     <resources>

@@ -69,7 +69,7 @@ class LoginViewController: UIViewController {
         }
         
         print("Success! You're logged in!")
-        performSegue(withIdentifier: "toMap", sender: nil)
+        performSegue(withIdentifier: "toMain", sender: nil)
     }
     
     @IBAction func signUp(_ sender: Any) {
